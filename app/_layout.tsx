@@ -1,17 +1,30 @@
-import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
-import { useFonts } from 'expo-font';
-import { Stack } from 'expo-router';
-import * as SplashScreen from 'expo-splash-screen';
 import { useEffect } from 'react';
-import 'react-native-reanimated';
+import { useFonts } from 'expo-font';
+import { Slot, SplashScreen, useRouter, useSegments } from "expo-router";
+import { Provider, useSelector } from 'react-redux';
+import store, { RootState } from '@/store';
 
-import { useColorScheme } from '@/hooks/useColorScheme';
-
-// Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
 
+const InitialLayout = () => {
+  const user = useSelector((state: RootState) => state.auth.user);
+  const segments = useSegments();
+  const router = useRouter();
+
+  const inTabsGroup = segments[0] === '(auth)';
+  console.log('user', user);
+
+  useEffect(() => {
+    if (!user && !inTabsGroup) {
+    } else {
+      router.replace('/(public)');
+    }
+  }, []);
+
+  return <Slot />;
+}
+
 export default function RootLayout() {
-  const colorScheme = useColorScheme();
   const [loaded] = useFonts({
     SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
   });
@@ -27,11 +40,8 @@ export default function RootLayout() {
   }
 
   return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="+not-found" />
-      </Stack>
-    </ThemeProvider>
+    <Provider store={store}>
+      <InitialLayout />
+    </Provider>
   );
 }
