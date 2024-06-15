@@ -1,13 +1,19 @@
 import { useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { signInAsync, signUpAsync } from '@/slices/auth';
+import { clearUser, signInAsync, signUpAsync } from '@/slices/auth';
 import { AppDispatch, RootState } from '@/store';
+import { clearWalletState } from '@/slices/wallet';
+import { clearUsersState } from '@/slices/users';
+import { clearOrdersState } from '@/slices/orders';
+import { clearEarningsState } from '@/slices/earnings';
+import { clearAttachmentState } from '@/slices/attachments';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function useAuth() {
   const dispatch = useDispatch<AppDispatch>();
-  const loading = useSelector((state: RootState) => state.auth.loading);
+  const { loading, error } = useSelector((state: RootState) => state.auth);
 
-  const signIn = useCallback(async (value: { email: string; password: string }) => {
+  const signIn = useCallback(async (value: { email: string; password: string, rememberMe: boolean }) => {
     dispatch(signInAsync(value));
   }, [dispatch]);
 
@@ -15,9 +21,20 @@ export default function useAuth() {
     dispatch(signUpAsync(value));
   }, [dispatch]);
 
+  const signOut = useCallback(async () => {
+    await AsyncStorage.removeItem('userCredentials');
+    dispatch(clearWalletState());
+    dispatch(clearUsersState());
+    dispatch(clearOrdersState());
+    dispatch(clearEarningsState());
+    dispatch(clearAttachmentState());
+  }, [dispatch]);
+
   return {
     signIn,
     signUp,
+    signOut,
     loading,
+    error
   };
 }
