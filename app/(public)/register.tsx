@@ -8,6 +8,7 @@ import Input from '@/components/forms/Input';
 import PrimaryButton from '@/components/buttons/PrimaryButton';
 import { Colors } from '@/constants/Colors';
 import useAuth from '@/hooks/auth/useAuth';
+import ErrorDialog from '@/components/dialogs/ErrorDialog';
 
 const Container = styled(View)`
   flex: 1;
@@ -55,7 +56,7 @@ const Register = () => {
   const [phone, setPhone] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [agreeToTerms, setAgreeToTerms] = useState<boolean>(false);
-  const { signUp, loading } = useAuth();
+  const { signUp, loading, error } = useAuth();
 
   const handleRegister = async () => {
     if (!agreeToTerms) {
@@ -69,7 +70,10 @@ const Register = () => {
     <Container>
       <LogoWrapper />
       <FormWrapper>
-        <View>
+        {error && (
+          <ErrorDialog message={error} />
+        )}
+        <View style={{ marginTop: 10 }}>
           <Input placeholder="Name" value={name} onChangeText={setName} />
           <Input placeholder="Email" value={email} onChangeText={setEmail} />
           <Input placeholder="Phone" value={phone} onChangeText={setPhone} />

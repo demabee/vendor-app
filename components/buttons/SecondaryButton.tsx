@@ -1,3 +1,4 @@
+// src/components/PrimaryButton.tsx
 import React from 'react';
 import styled from 'styled-components/native';
 import { ActivityIndicator, TouchableOpacity, TouchableOpacityProps } from 'react-native';
@@ -8,10 +9,10 @@ type Props = TouchableOpacityProps & {
   loading?: boolean;
 };
 
-const StyledTouchableOpacity = styled(TouchableOpacity) <{ disabled: boolean }>`
+const StyledTouchableOpacity = styled(TouchableOpacity)`
   height: 40px;
-  background-color: ${({ disabled }) => (disabled ? Colors.light.lightRed : Colors.dark.darkRed)};
-  border-color: ${({ disabled }) => (disabled ? Colors.light.lightRed : Colors.dark.darkRed)};
+  background-color: ${Colors.light.orange};
+  border-color: ${Colors.light.orange};
   border-width: 1px;
   margin-bottom: 12px;
   padding: 8px;
@@ -27,9 +28,9 @@ const ButtonText = styled.Text`
   font-size: 16px;
 `;
 
-const PrimaryButton: React.FC<Props> = ({ title, loading, ...props }) => {
+const SecondaryButton: React.FC<Props> = ({ title, loading, ...props }) => {
   return (
-    <StyledTouchableOpacity {...props} disabled={props.disabled || loading as boolean}>
+    <StyledTouchableOpacity {...props}>
       {loading ? (
         <ActivityIndicator animating={true} color="white" />
       ) : (
@@ -39,4 +40,4 @@ const PrimaryButton: React.FC<Props> = ({ title, loading, ...props }) => {
   );
 };
 
-export default PrimaryButton;
+export default SecondaryButton;

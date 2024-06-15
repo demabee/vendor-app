@@ -55,7 +55,7 @@ const Login = () => {
   const { signIn, loading } = useAuth();
 
   const handleLogin = async () => {
-    await signIn({ email, password });
+    await signIn({ email, password, rememberMe });
   };
 
   return (

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { ReactNode } from 'react';
 import styled from 'styled-components/native';
 import { ActivityIndicator, TouchableOpacity, TouchableOpacityProps } from 'react-native';
 import { Colors } from '@/constants/Colors';
@@ -6,16 +6,13 @@ import { Colors } from '@/constants/Colors';
 type Props = TouchableOpacityProps & {
   title: string;
   loading?: boolean;
+  leftIcon?: ReactNode
 };
 
 const StyledTouchableOpacity = styled(TouchableOpacity) <{ disabled: boolean }>`
-  height: 40px;
-  background-color: ${({ disabled }) => (disabled ? Colors.light.lightRed : Colors.dark.darkRed)};
-  border-color: ${({ disabled }) => (disabled ? Colors.light.lightRed : Colors.dark.darkRed)};
-  border-width: 1px;
-  margin-bottom: 12px;
+  height: auto;
+  background-color: transparent;
   padding: 8px;
-  border-radius: 4px;
   justify-content: center;
   align-items: center;
   flex-direction: row;
@@ -23,20 +20,24 @@ const StyledTouchableOpacity = styled(TouchableOpacity) <{ disabled: boolean }>`
 `;
 
 const ButtonText = styled.Text`
-  color: white;
+  color: ${Colors.dark.darkGray};
   font-size: 16px;
+  font-weight: 500;
 `;
 
-const PrimaryButton: React.FC<Props> = ({ title, loading, ...props }) => {
+const TransparentButton: React.FC<Props> = ({ title, leftIcon, loading, ...props }) => {
   return (
     <StyledTouchableOpacity {...props} disabled={props.disabled || loading as boolean}>
       {loading ? (
         <ActivityIndicator animating={true} color="white" />
       ) : (
-        <ButtonText>{title}</ButtonText>
+        <>
+          {leftIcon}
+          <ButtonText>{title}</ButtonText>
+        </>
       )}
     </StyledTouchableOpacity>
   );
 };
 
-export default PrimaryButton;
+export default TransparentButton;
