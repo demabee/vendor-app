@@ -32,7 +32,7 @@ const ButtonContainer = styled(View)`
   justify-content: center;
 `;
 
-export default function ThresholdModal() {
+export default function ThresholdModal({ onCloseModal }: { onCloseModal: () => void }) {
   const user = useSelector((state: RootState) => state.auth.user);
   const [amount, setAmount] = useState<number>(0);
   const { wallet, updateThreshold } = useWallet();
@@ -42,14 +42,15 @@ export default function ThresholdModal() {
       if (user.uid && amount > 0) {
         updateThreshold(user.uid, amount);
       }
-      router.back();
     } catch (error) {
       console.error('Updating threshold failed:', error);
+    } finally {
+      onCloseModal();
     }
   };
 
   const handleCancel = () => {
-    router.back();
+    onCloseModal();
   };
 
   useEffect(() => {

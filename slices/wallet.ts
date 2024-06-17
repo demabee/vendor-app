@@ -84,7 +84,7 @@ export const withdrawWalletThunk = createAsyncThunk(
 
 export const updateThresholdThunk = createAsyncThunk(
   'wallet/updateThresholdThunk',
-  async ({ userId, amount }: { userId: string, amount: number }, { rejectWithValue }) => {
+  async ({ userId, amount }: { userId: string, amount: number }, { rejectWithValue, dispatch }) => {
     try {
       const userDocRef = doc(firestore, 'users', userId);
       const userDocSnap = await getDoc(userDocRef);
@@ -99,10 +99,9 @@ export const updateThresholdThunk = createAsyncThunk(
         throw new Error('User wallet document not found');
       }
 
-      const walletData = userWalletDocSnap.data() as WalletDocData;
+      userWalletDocSnap.data() as WalletDocData;
       await updateDoc(userWalletRef, { threshold: amount });
-
-      return { ...walletData };
+      dispatch(fetchWalletThunk(userId));
     } catch (error: any) {
       return rejectWithValue(error.message);
     }
@@ -118,7 +117,6 @@ export const setupWalletThunk = createAsyncThunk(
       if (!walletDoc.exists()) {
         throw new Error('Wallet document not found');
       }
-      console.log('ASDFASDFASDF', walletDoc.data());
       const userDocRef = doc(firestore, 'users', userId);
       await updateDoc(userDocRef, { wallet: walletRef });
 
@@ -170,7 +168,6 @@ const walletSlice = createSlice({
         state.error = null;
       })
       .addCase(updateThresholdThunk.fulfilled, (state, action) => {
-        state.wallet = action.payload;
         state.loading = false;
       })
       .addCase(updateThresholdThunk.rejected, (state, action) => {

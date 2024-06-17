@@ -34,7 +34,7 @@ export const fetchUserProfilePictureThunk = createAsyncThunk(
 
 export const uploadUserProfilePictureThunk = createAsyncThunk(
   'attachments/uploadUserProfilePicture',
-  async ({ uri, userId }: { uri: string, userId: string }, { rejectWithValue }) => {
+  async ({ uri, userId }: { uri: string, userId: string }, { rejectWithValue, dispatch }) => {
     try {
       const blob: Blob = await fetch(uri).then(response => response.blob());
 
@@ -48,10 +48,11 @@ export const uploadUserProfilePictureThunk = createAsyncThunk(
       await updateDoc(userDocRef, {
         profilePicture: downloadURL,
       });
-
       return downloadURL;
     } catch (error: any) {
       return rejectWithValue(error.message);
+    } finally {
+      // dispatch(fetchUserProfilePictureThunk(userId));
     }
   }
 );
@@ -84,8 +85,8 @@ const attachmentsSlice = createSlice({
         state.error = null;
       })
       .addCase(uploadUserProfilePictureThunk.fulfilled, (state, action) => {
-        state.profilePicture = action.payload;
         state.loading = false;
+        state.profilePicture = action.payload;
       })
       .addCase(uploadUserProfilePictureThunk.rejected, (state, action) => {
         state.loading = false;

@@ -24,7 +24,7 @@ const StyledTouchableOpacity = styled(TouchableOpacity) <{ disabled: boolean }>`
 
 const ButtonText = styled.Text`
   color: white;
-  font-size: 16px;
+  font-size: 12px;
 `;
 
 const PrimaryButton: React.FC<Props> = ({ title, loading, ...props }) => {

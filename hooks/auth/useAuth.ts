@@ -28,6 +28,7 @@ export default function useAuth() {
     dispatch(clearOrdersState());
     dispatch(clearEarningsState());
     dispatch(clearAttachmentState());
+    dispatch(clearUser());
   }, [dispatch]);
 
   return {

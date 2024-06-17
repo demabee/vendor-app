@@ -33,7 +33,7 @@ const ButtonContainer = styled(View)`
   justify-content: center;
 `;
 
-export default function WithdrawModal() {
+export default function WithdrawModal({ onCloseModal }: { onCloseModal: () => void }) {
   const user = useSelector((state: RootState) => state.auth.user);
   const [amount, setAmount] = useState<number>(0);
   const { withdrawWallet, error } = useWallet();
@@ -46,12 +46,12 @@ export default function WithdrawModal() {
     } catch (error) {
       console.error('Withdrawal failed:', error);
     } finally {
-      router.back();
+      onCloseModal();
     }
   };
 
   const handleCancel = () => {
-    router.back();
+    onCloseModal();
   }
 
   return (

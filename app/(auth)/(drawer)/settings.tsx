@@ -38,7 +38,7 @@ const SeederItemWrapper = styled(View)`
 `;
 
 const SeederItemText = styled(Text)`
-  font-size: 20px;
+  font-size: 15px;
   font-weight: bold;
 `;
 
@@ -72,7 +72,7 @@ const Settings = () => {
   const { specificUser } = useSelector((state: RootState) => state.users);
   const { loading: loadingUser, updateSpecificUser } = useUsers();
   const { fetchAllActiveOrders, fetchAllPendingOrders } = useOrders();
-  const { uploadProfilePicture } = useAttachments();
+  const { profilePicture, uploadProfilePicture } = useAttachments();
   const { fetchWallet } = useWallet();
 
   const isFormValid = useMemo(() => {
@@ -168,7 +168,7 @@ const Settings = () => {
         displayName: specificUser.displayName ?? '',
         email: specificUser.email ?? '',
         phoneNumber: specificUser.phoneNumber ?? '',
-        profilePicture: specificUser.profilePicture ?? ''
+        profilePicture: ''
       });
     }
   }, [specificUser]);
@@ -178,7 +178,7 @@ const Settings = () => {
       <Card title="Edit Profile" headerShown>
         <ImageContainer>
           <UploadImage
-            image={userForm.profilePicture}
+            image={userForm.profilePicture !== '' ? userForm.profilePicture : profilePicture}
             setImage={handleUpload}
           />
         </ImageContainer>

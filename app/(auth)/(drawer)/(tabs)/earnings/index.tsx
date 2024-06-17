@@ -47,7 +47,7 @@ const AnalyticsSection = styled(View)`
 `;
 
 const BigText = styled(Text)`
-  font-size: 40px;
+  font-size: 35px;
   font-weight: 500;
   color: ${Colors.dark.darkRed};
   text-align: center;
@@ -76,7 +76,7 @@ const Earnings = () => {
       return wallet?.balance > wallet?.threshold;
     }
     return false;
-  }, [wallet]);
+  }, [wallet, loadingWallet]);
 
   const onWithdrawModal = () => {
     withdrawModalRef.current?.present();
@@ -84,6 +84,11 @@ const Earnings = () => {
 
   const onThresholdModal = () => {
     thresholdModalRef.current?.present();
+  };
+
+  const onCloseModal = () => {
+    withdrawModalRef.current?.dismiss();
+    thresholdModalRef.current?.dismiss();
   };
 
   const onSetupWallet = () => {
@@ -101,7 +106,7 @@ const Earnings = () => {
           message="Your balance is below the minimum withdrawal threshold. Please continue earning to reach the minimum amount required for withdrawal."
         />
       )}
-      {error && <ErrorDialog message={error} onPress={onClearError} />}
+      {/* {error && <ErrorDialog message={error} onPress={onClearError} />} */}
       <BalanceSection>
         <Card
           title="Available Balance"
@@ -117,7 +122,7 @@ const Earnings = () => {
           {loadingWallet ? <ActivityIndicator size="large" color={Colors.light.primaryRed} /> : (
             <>
               {wallet ? (
-                <BigText>{wallet?.balance ?? 0}</BigText>
+                <BigText>{wallet?.balance.toFixed(2) ?? 0}</BigText>
               ) : (
                 <PrimaryButton onPress={onSetupWallet} title="Setup Wallet" />
               )}
@@ -152,7 +157,7 @@ const Earnings = () => {
           }
         >
           {loading ? <ActivityIndicator size="large" color={Colors.light.primaryRed} /> : (
-            <BigText>${totalPaidEarningsPrice}</BigText>
+            <BigText>${totalPaidEarningsPrice.toFixed(2)}</BigText>
           )}
         </Card>
         <Card
@@ -167,7 +172,7 @@ const Earnings = () => {
           }
         >
           {loading ? <ActivityIndicator size="large" color={Colors.light.primaryRed} /> : (
-            <BigText>${totalUnpaidEarningsPrice}</BigText>
+            <BigText>${totalUnpaidEarningsPrice.toFixed(2)}</BigText>
           )}
         </Card>
       </AnalyticsSection>
@@ -192,7 +197,7 @@ const Earnings = () => {
         snapPoints={withdrawModalSnapPoints}
       >
         <BottomSheetView style={styles.bottomSheetStyle}>
-          <WithdrawModal />
+          <WithdrawModal onCloseModal={onCloseModal} />
         </BottomSheetView>
       </BottomSheetModal>
       <BottomSheetModal
@@ -202,7 +207,7 @@ const Earnings = () => {
         snapPoints={thresholdModalSnapPoints}
       >
         <BottomSheetView style={styles.bottomSheetStyle}>
-          <ThresholdModal />
+          <ThresholdModal onCloseModal={onCloseModal} />
         </BottomSheetView>
       </BottomSheetModal>
     </>
